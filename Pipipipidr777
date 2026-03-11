@@ -1,4 +1,4 @@
-local key = "FIRE"
+    local key = "FIRE"
 
 local parent = game.CoreGui
 pcall(function()
