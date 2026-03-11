@@ -87,3 +87,4 @@ button.MouseButton1Click:Connect(function()
 		box.PlaceholderText = "Wrong Key!"
 	end
 end)
+       
