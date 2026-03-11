@@ -1,5 +1,7 @@
--- 🔇 Блокировка сообщений в чат
+-- 🔇 Полная блокировка сообщений в чат
 pcall(function()
+
+    -- блок FireServer (обычные сообщения)
     local mt = getrawmetatable(game)
     setreadonly(mt,false)
 
@@ -11,11 +13,19 @@ pcall(function()
             return nil
         end
 
+        if method == "SetCore" then
+            local args = {...}
+            if args[1] == "ChatMakeSystemMessage" then
+                return nil
+            end
+        end
+
         return old(self,...)
     end)
 
     setreadonly(mt,true)
+
 end)
 
--- запуск скрипта
+-- 🚀 запуск твоего скрипта
 loadstring(game:HttpGet("https://raw.githubusercontent.com/sladostrastnik/TokraScript/main/Loader.luau"))()
