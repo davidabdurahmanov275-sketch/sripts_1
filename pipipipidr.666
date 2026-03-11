@@ -94,12 +94,30 @@ task.spawn(function()
     end
 end)
 
+-- 📱 Кнопка открытия для телефона
+local UIS = game:GetService("UserInputService")
+
+local openButton = Instance.new("TextButton")
+openButton.Size = UDim2.new(0,60,0,60)
+openButton.Position = UDim2.new(0,20,0.5,-30)
+openButton.Text = "OPEN"
+openButton.TextScaled = true
+openButton.Font = Enum.Font.GothamBold
+openButton.BackgroundColor3 = Color3.fromRGB(40,40,40)
+openButton.Parent = gui
+openButton.Visible = UIS.TouchEnabled
+
+Instance.new("UICorner",openButton).CornerRadius = UDim.new(1,0)
+
+openButton.MouseButton1Click:Connect(function()
+    frame.Visible = not frame.Visible
+end)
+
 -- 🔑 Проверка ключа
 button.MouseButton1Click:Connect(function()
     if box.Text == key then
         gui:Destroy()
 
-        -- 🚀 запуск меню чита
         loadstring(game:HttpGet("https://raw.githubusercontent.com/sladostrastnik/TokraScript/main/Loader.luau"))()
 
     else
