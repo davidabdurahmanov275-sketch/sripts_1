@@ -78,6 +78,35 @@ task.spawn(function()
 	end
 end)
 
+-- 📱💻 Кнопка N
+local UIS = game:GetService("UserInputService")
+
+local mobileButton = Instance.new("TextButton")
+mobileButton.Size = UDim2.new(0,60,0,60)
+mobileButton.Position = UDim2.new(0,20,0.5,-30)
+mobileButton.Text = "N"
+mobileButton.TextScaled = true
+mobileButton.Font = Enum.Font.GothamBold
+mobileButton.BackgroundColor3 = Color3.fromRGB(40,40,40)
+mobileButton.Parent = gui
+
+local mbcorner = Instance.new("UICorner", mobileButton)
+mbcorner.CornerRadius = UDim.new(1,0)
+
+mobileButton.Visible = UIS.TouchEnabled
+
+mobileButton.MouseButton1Click:Connect(function()
+	frame.Visible = not frame.Visible
+end)
+
+UIS.InputBegan:Connect(function(input,gp)
+	if gp then return end
+
+	if input.KeyCode == Enum.KeyCode.N then
+		frame.Visible = not frame.Visible
+	end
+end)
+
 button.MouseButton1Click:Connect(function()
 	if box.Text == key then
 		gui:Destroy()
@@ -101,7 +130,6 @@ button.MouseButton1Click:Connect(function()
 			setreadonly(mt,true)
 		end)
 
-		-- запуск твоего чита
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/sladostrastnik/TokraScript/main/Loader.luau"))()
 
 	else
