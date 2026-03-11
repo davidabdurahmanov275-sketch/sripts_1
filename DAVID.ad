@@ -75,12 +75,10 @@ spawn(function()
 		wait(0.03)
 	end
 end)
-
--- Key check
 button.MouseButton1Click:Connect(function()
 	if box.Text == key then
 		gui:Destroy()
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/sladostrastnik/TokraScript/refs/heads/main/Loader.luau"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/sladostrastnik/TokraScript/main/Loader.luau"))()
 	else
 		box.Text = ""
 		box.PlaceholderText = "Wrong Key!"
