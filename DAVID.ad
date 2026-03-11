@@ -1,4 +1,4 @@
-local key = "DAVID"
+local key = "FIRE"
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "KeySystem"
