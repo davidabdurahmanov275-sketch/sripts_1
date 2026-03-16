@@ -1,1 +1,2 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/sladostrastnik/TokraScript/refs/heads/main/Loader.luau"))()  -- game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Tokra Script FREE BETA loaded. Made by VF_Owner","All")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/sladostrastnik/TokraScript/refs/heads/main/Loader.luau"))() 
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Tokra Script FREE BETA loaded. Made by VF_Owner","All")
