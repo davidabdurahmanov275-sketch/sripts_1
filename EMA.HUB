@@ -1,139 +1,91 @@
 -- HUB CORE
 local Hub = {}
-Hub.Modules = {}
-
 Hub.Player = game.Players.LocalPlayer
 Hub.Character = Hub.Player.Character or Hub.Player.CharacterAdded:Wait()
 
-function Hub:RegisterModule(name,module)
-    self.Modules[name] = module
-end
-
 function Hub:GetHumanoid()
-    if self.Character then
-        return self.Character:FindFirstChild("Humanoid")
+    local char = Hub.Player.Character
+    if char then
+        return char:FindFirstChild("Humanoid")
     end
 end
 
 function Hub:SetSpeed(speed)
-    local hum = self:GetHumanoid()
+    local hum = Hub:GetHumanoid()
     if hum then
         hum.WalkSpeed = speed
     end
 end
 
 function Hub:SetJump(power)
-    local hum = self:GetHumanoid()
+    local hum = Hub:GetHumanoid()
     if hum then
         hum.JumpPower = power
     end
 end
 
 function Hub:Fly()
-    local root = self.Character:FindFirstChild("HumanoidRootPart")
+    local char = Hub.Player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+
     if root then
         local bv = Instance.new("BodyVelocity")
         bv.MaxForce = Vector3.new(999999,999999,999999)
-        bv.Velocity = Vector3.new(0,50,0)
+        bv.Velocity = Vector3.new(0,60,0)
         bv.Parent = root
     end
 end
 
 
--- UI SYSTEM
-local UI = {}
+-- UI
+local player = game.Players.LocalPlayer
 
-function UI:CreateWindow(title)
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
 
-    local player = game.Players.LocalPlayer
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0,400,0,300)
+frame.Position = UDim2.new(0.5,-200,0.5,-150)
+frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
 
-    local gui = Instance.new("ScreenGui")
-    gui.Parent = player.PlayerGui
-
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0,600,0,400)
-    frame.Position = UDim2.new(0.5,-300,0.5,-200)
-    frame.BackgroundColor3 = Color3.fromRGB(25,25,25)
-    frame.Parent = gui
-
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.Text = title
-    titleLabel.Size = UDim2.new(1,0,0,40)
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.TextColor3 = Color3.new(1,1,1)
-    titleLabel.TextScaled = true
-    titleLabel.Parent = frame
-
-    return frame
-end
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1,0,0,40)
+title.BackgroundTransparency = 1
+title.Text = "Ultra Hub"
+title.TextColor3 = Color3.new(1,1,1)
+title.TextScaled = true
+title.Parent = frame
 
 
--- BUTTON CREATOR
-local function CreateButton(parent,text,callback)
+-- BUTTON FUNCTION
+local function CreateButton(text,y,callback)
 
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0,180,0,35)
-    btn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+
+    btn.Size = UDim2.new(0,180,0,40)
+    btn.Position = UDim2.new(0,20,0,y)
+    btn.BackgroundColor3 = Color3.fromRGB(45,45,45)
     btn.TextColor3 = Color3.new(1,1,1)
     btn.Text = text
-    btn.Parent = parent
+    btn.Parent = frame
 
     btn.MouseButton1Click:Connect(callback)
 
-    return btn
 end
 
 
--- CREATE WINDOW
-local window = UI:CreateWindow("Ultra Hub")
-
-
--- TAB LIST
-local tabs = {
-    "Player",
-    "Movement",
-    "Combat",
-    "Visual",
-    "Teleport",
-    "Fun",
-    "Admin",
-    "Premium",
-    "Settings"
-}
-
-local y = 50
-
-for _,tabName in pairs(tabs) do
-
-    local tabButton = Instance.new("TextButton")
-    tabButton.Size = UDim2.new(0,120,0,30)
-    tabButton.Position = UDim2.new(0,10,0,y)
-    tabButton.BackgroundColor3 = Color3.fromRGB(35,35,35)
-    tabButton.TextColor3 = Color3.new(1,1,1)
-    tabButton.Text = tabName
-    tabButton.Parent = window
-
-    y = y + 35
-
-end
-
-
--- FEATURE BUTTONS
-local featureFrame = Instance.new("Frame")
-featureFrame.Size = UDim2.new(0,400,0,300)
-featureFrame.Position = UDim2.new(0,180,0,50)
-featureFrame.BackgroundTransparency = 1
-featureFrame.Parent = window
-
-
-CreateButton(featureFrame,"Speed 100",function()
+-- BUTTONS
+CreateButton("Speed 100",60,function()
     Hub:SetSpeed(100)
 end)
 
-CreateButton(featureFrame,"Jump 120",function()
+CreateButton("Jump 120",110,function()
     Hub:SetJump(120)
 end)
 
-CreateButton(featureFrame,"Fly",function()
+CreateButton("Fly",160,function()
     Hub:Fly()
 end)
