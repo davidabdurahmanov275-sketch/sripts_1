@@ -1,91 +1,183 @@
--- HUB CORE
-local Hub = {}
-Hub.Player = game.Players.LocalPlayer
-Hub.Character = Hub.Player.Character or Hub.Player.CharacterAdded:Wait()
+-- PLAYER
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
 
-function Hub:GetHumanoid()
-    local char = Hub.Player.Character
-    if char then
-        return char:FindFirstChild("Humanoid")
-    end
-end
-
-function Hub:SetSpeed(speed)
-    local hum = Hub:GetHumanoid()
-    if hum then
-        hum.WalkSpeed = speed
-    end
-end
-
-function Hub:SetJump(power)
-    local hum = Hub:GetHumanoid()
-    if hum then
-        hum.JumpPower = power
-    end
-end
-
-function Hub:Fly()
-    local char = Hub.Player.Character
-    local root = char and char:FindFirstChild("HumanoidRootPart")
-
-    if root then
-        local bv = Instance.new("BodyVelocity")
-        bv.MaxForce = Vector3.new(999999,999999,999999)
-        bv.Velocity = Vector3.new(0,60,0)
-        bv.Parent = root
-    end
-end
-
-
--- UI
-local player = game.Players.LocalPlayer
-
+-- GUI
 local gui = Instance.new("ScreenGui")
-gui.Parent = player.PlayerGui
+gui.Parent = player:WaitForChild("PlayerGui")
 
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0,400,0,300)
-frame.Position = UDim2.new(0.5,-200,0.5,-150)
-frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
-frame.Active = true
-frame.Draggable = true
-frame.Parent = gui
+local main = Instance.new("Frame")
+main.Size = UDim2.new(0,500,0,350)
+main.Position = UDim2.new(0.5,-250,0.5,-175)
+main.BackgroundColor3 = Color3.fromRGB(25,25,25)
+main.Active = true
+main.Draggable = true
+main.Parent = gui
 
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1,0,0,40)
-title.BackgroundTransparency = 1
-title.Text = "Ultra Hub"
-title.TextColor3 = Color3.new(1,1,1)
+title.Text = "LUTY HUB"
 title.TextScaled = true
-title.Parent = frame
+title.TextColor3 = Color3.new(1,1,1)
+title.BackgroundTransparency = 1
+title.Parent = main
 
 
--- BUTTON FUNCTION
-local function CreateButton(text,y,callback)
+-- TAB FRAME
+local tabFrame = Instance.new("Frame")
+tabFrame.Size = UDim2.new(0,120,1,-40)
+tabFrame.Position = UDim2.new(0,0,0,40)
+tabFrame.BackgroundColor3 = Color3.fromRGB(35,35,35)
+tabFrame.Parent = main
+
+local content = Instance.new("Frame")
+content.Size = UDim2.new(1,-120,1,-40)
+content.Position = UDim2.new(0,120,0,40)
+content.BackgroundTransparency = 1
+content.Parent = main
+
+
+-- CREATE TAB
+local tabs = {}
+
+local function CreateTab(name)
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1,0,1,0)
+    frame.Visible = false
+    frame.BackgroundTransparency = 1
+    frame.Parent = content
+
+    tabs[name] = frame
 
     local btn = Instance.new("TextButton")
-
-    btn.Size = UDim2.new(0,180,0,40)
-    btn.Position = UDim2.new(0,20,0,y)
-    btn.BackgroundColor3 = Color3.fromRGB(45,45,45)
+    btn.Size = UDim2.new(1,0,0,35)
+    btn.Text = name
     btn.TextColor3 = Color3.new(1,1,1)
+    btn.BackgroundColor3 = Color3.fromRGB(45,45,45)
+    btn.Parent = tabFrame
+
+    btn.MouseButton1Click:Connect(function()
+
+        for i,v in pairs(tabs) do
+            v.Visible = false
+        end
+
+        frame.Visible = true
+
+    end)
+
+    return frame
+end
+
+
+-- CREATE BUTTON
+local function CreateButton(parent,text,y,callback)
+
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0,200,0,40)
+    btn.Position = UDim2.new(0,20,0,y)
     btn.Text = text
-    btn.Parent = frame
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+    btn.Parent = parent
 
     btn.MouseButton1Click:Connect(callback)
 
 end
 
 
--- BUTTONS
-CreateButton("Speed 100",60,function()
-    Hub:SetSpeed(100)
+-- PLAYER TAB
+local playerTab = CreateTab("Player")
+
+CreateButton(playerTab,"Speed 100",20,function()
+
+    local hum = player.Character:FindFirstChild("Humanoid")
+    if hum then
+        hum.WalkSpeed = 100
+    end
+
 end)
 
-CreateButton("Jump 120",110,function()
-    Hub:SetJump(120)
+CreateButton(playerTab,"Jump 150",80,function()
+
+    local hum = player.Character:FindFirstChild("Humanoid")
+    if hum then
+        hum.JumpPower = 150
+    end
+
 end)
 
-CreateButton("Fly",160,function()
-    Hub:Fly()
+
+-- MOVEMENT TAB
+local moveTab = CreateTab("Movement")
+
+CreateButton(moveTab,"Fly",20,function()
+
+    local root = player.Character:FindFirstChild("HumanoidRootPart")
+
+    local bv = Instance.new("BodyVelocity")
+    bv.MaxForce = Vector3.new(999999,999999,999999)
+    bv.Velocity = Vector3.new(0,60,0)
+    bv.Parent = root
+
 end)
+
+CreateButton(moveTab,"Infinite Jump",80,function()
+
+    mouse.KeyDown:Connect(function(k)
+
+        if k == " " then
+            player.Character:FindFirstChild("Humanoid"):ChangeState("Jumping")
+        end
+
+    end)
+
+end)
+
+
+-- TELEPORT TAB
+local tpTab = CreateTab("Teleport")
+
+CreateButton(tpTab,"Teleport Random Player",20,function()
+
+    local players = Players:GetPlayers()
+
+    local target = players[math.random(1,#players)]
+
+    if target ~= player then
+
+        player.Character:MoveTo(target.Character.HumanoidRootPart.Position)
+
+    end
+
+end)
+
+
+-- FUN TAB
+local funTab = CreateTab("Fun")
+
+CreateButton(funTab,"Spin",20,function()
+
+    while true do
+        task.wait()
+
+        player.Character.HumanoidRootPart.CFrame *= CFrame.Angles(0,math.rad(10),0)
+
+    end
+
+end)
+
+
+-- SETTINGS TAB
+local settingsTab = CreateTab("Settings")
+
+CreateButton(settingsTab,"Close Hub",20,function()
+
+    gui:Destroy()
+
+end)
+
+
+tabs["Player"].Visible = true
